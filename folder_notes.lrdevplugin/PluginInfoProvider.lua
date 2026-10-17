@@ -9,11 +9,52 @@
 local lr_view = import 'LrView'
 local lr_http = import 'LrHttp'
 local lr_color = import 'LrColor'
+local lr_dialogs = import 'LrDialogs'
+local lr_file_utils = import 'LrFileUtils'
+local lr_path_utils = import 'LrPathUtils'
+local lr_tasks = import 'LrTasks'
 local lr_prefs = import 'LrPrefs'.prefsForPlugin()
 local bind = lr_view.bind
 
+-- Width of the path fields, narrower than the other fields to leave room for the Browse… button.
+local path_field_chars = 42
+
 lr_prefs.pattern1 = lr_prefs.pattern1 or lr_prefs.digitalPattern or ""
 lr_prefs.pattern2 = lr_prefs.pattern2 or lr_prefs.analogPattern or ""
+
+-- Let the user choose a folder or a file with the system dialog and store the
+-- selected path in the plugin preference named pref_name. The edit field bound
+-- to that preference is updated automatically.
+local function browse_path(pref_name, dialog_title, choose_directories)
+	lr_tasks.startAsyncTask(function()
+		-- Start from the current value, or from its parent if it no longer exists.
+		local initial_directory = nil
+		local current = lr_prefs[pref_name]
+		if current and current ~= "" then
+			if lr_file_utils.exists(current) == "directory" then
+				initial_directory = current
+			else
+				local parent = lr_path_utils.parent(current)
+				if parent and lr_file_utils.exists(parent) == "directory" then
+					initial_directory = parent
+				end
+			end
+		end
+
+		local selection = lr_dialogs.runOpenPanel {
+			title = dialog_title,
+			canChooseFiles = not choose_directories,
+			canChooseDirectories = choose_directories,
+			canCreateDirectories = choose_directories,
+			allowsMultipleSelection = false,
+			initialDirectory = initial_directory,
+		}
+
+		if selection and selection[1] then
+			lr_prefs[pref_name] = selection[1]
+		end
+	end)
+end
 
 local function sections_for_top_of_dialog(_, _)
 	local factory = lr_view.osFactory()
@@ -100,7 +141,13 @@ local function sections_for_top_of_dialog(_, _)
 					},
 					factory:edit_field {
 						value = bind "notesFolderPath",  -- THIS writes automatically to prefs
-						width_in_chars = 50,
+						width_in_chars = path_field_chars,
+					},
+					factory:push_button {
+						title = "Browse…",
+						action = function()
+							browse_path("notesFolderPath", "Select the notes folder", true)
+						end,
 					},
 				},
 
@@ -113,7 +160,13 @@ local function sections_for_top_of_dialog(_, _)
 					},
 					factory:edit_field {
 						value = bind "editorPath",  -- Same here
-						width_in_chars = 50,
+						width_in_chars = path_field_chars,
+					},
+					factory:push_button {
+						title = "Browse…",
+						action = function()
+							browse_path("editorPath", "Select the notes editor", false)
+						end,
 					},
 				},
 
