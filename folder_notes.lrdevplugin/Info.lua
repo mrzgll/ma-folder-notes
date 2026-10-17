@@ -10,7 +10,7 @@ return {
 		title = "Open folder notes",
 		file = "FolderNotes.lua",
 	}},
-	LrPluginInfoUrl = "https://example.com/coming-soon",  -- URL of web page that provides information for the plugin
+	LrPluginInfoUrl = "https://onslowphotography.com/en/a-lightroom-plugin-for-annotating-folders/",
 	LrPluginInfoProvider = "PluginInfoProvider.lua",      -- Name of the Lua file to be executed when the plugin is loaded
 	LrPluginName = "MA Folder Notes",                     -- This string appears in the Plug-in Manager dialog
 
