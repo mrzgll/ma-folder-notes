@@ -13,9 +13,14 @@ with a preconfigured text editor.
 
 ## Installation
 
-1. Download or clone this plugin.
-2. Place the `folder_notes.lrdevplugin` folder wherever you prefer.
-3. In Lightroom Classic, open the Plug-in Manager, then add and enable the plugin.
+1. Download the latest `ma-folder-notes-v<version>.zip` from the [Releases page](https://github.com/mrzgll/ma-folder-notes/releases/latest). Use this zip, not the "Source code" archives listed below it, which contain the whole repository.
+2. Unzip it. You get a `folder_notes.lrdevplugin` folder.
+3. Move the folder to a permanent location of your choice. Lightroom Classic loads the plugin from there, so do not move or delete it afterwards.
+4. In Lightroom Classic, open File > Plug-in Manager, click Add and select the `folder_notes.lrdevplugin` folder. The plugin should show the status "Installed and running".
+
+To update, close Lightroom Classic, replace the old `folder_notes.lrdevplugin` folder with the one from the new zip, then start Lightroom Classic again.
+
+If you prefer, you can clone this repository instead and add the `folder_notes.lrdevplugin` folder from your clone in the same way.
 
 ## Configuration
 
